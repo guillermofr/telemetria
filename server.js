@@ -22,7 +22,7 @@ if (io.server._handle == null){
 function UPDATE_PTLB(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_PTLB',chunk});
+	io.sockets.emit('SC_UPDATE_PTLB',chunk);
 }	
 //Latitud y longitud
 function UPDATE_GPGLL(chunk){

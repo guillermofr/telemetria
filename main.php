@@ -71,7 +71,7 @@
 		$('.v_bat').html(data.V);
 		$('.i_bat').html(data.I);
 		$('.temp_bat').html(data.T);
-		$('.w_bat').html(data.W);
+		$('.w_bat').html(parseFloat(data.V) * parseFloat(data.I));
 		$('.mah_bat').html(data.mAh);
 	}	
 	//Información del bloqueo de satélites 
