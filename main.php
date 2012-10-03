@@ -4,7 +4,7 @@
 <script>
 
 //socket io
-	var socket = io.connect('http://127.0.0.1:1415');
+	var socket = io.connect('http://10.1.2.173:1415');
 	
 	socket.on('SC_test_event', function (data) {
 		$('.datos').html('hola '+data.name);

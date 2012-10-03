@@ -1,6 +1,8 @@
 //SERVER NODE.JS
 
 var io = require('socket.io');
+var SerialPort = require('serialport2').SerialPort;
+var port = new SerialPort();
 
 io = io.listen(1415);
 //io.set('log level', 1);
@@ -53,9 +55,7 @@ function UPDATE_GPZDA(chunk){
 	io.sockets.emit('SC_UPDATE_GPZDA',{});
 }	
 
-/*
-var SerialPort = require('serialport2').SerialPort;
-var port = new SerialPort();
+
 
 port.on('data', function(data) {
   parser(data.toString());
@@ -65,16 +65,16 @@ port.on('error', function(err) {
   console.log(err);
 });
 
-port.open('COM4', {
+port.open('/dev/ttyACM0', {
   baudRate: 9600,
   dataBits: 8,
   parity: 'none',
   stopBits: 1
 }, function(err) {
-  port.write("hello world");
+  port.write("");
   port.close();
 });
-*/
+
 
 
 
