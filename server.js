@@ -53,6 +53,11 @@ function UPDATE_GPZDA(chunk){
 	//tratar el chunk
 	
 	io.sockets.emit('SC_UPDATE_GPZDA',{});
+}
+function UPDATE_GPRMC(chunk){
+	//tratar el chunk
+	
+	io.sockets.emit('SC_UPDATE_GPRMC',{});
 }	
 
 port.on('data', function(data) {
@@ -77,27 +82,54 @@ port.open('/dev/ttyACM0', {
 function parser(str){
  		/* El checksum no va separado por , si no por * */
  		var aux = str.split("*"); /* Aux[0] = Informacion;  Aux[1]= Checksum */
- 		/* Trozeamos la cadena */ 
+ 		/* Troceamos la cadena */ 
  		var n = aux[0].split(",");
  		var checksum = aux[1];
  			
+		console.log(n);
+		
  			if (n[0]=="$PTLB"){
 
-				datos = {ID:n[1],V:n[2],I:n[3],T:n[4],mAh:n[5],Checksum:checksum};
+				datos = {ID:n[1],
+					  V:n[2],
+					  I:n[3],
+					  T:n[4],
+					  mAh:n[5],
+					  Checksum:checksum};
 				UPDATE_PTLB(datos);
+				console.log("TELEM: BAT");
+ 			}
+
+ 			if (n[0]=="$PTLP"){
+
+				datos = {ID:n[1],
+					  V:n[2],
+					  I:n[3],
+					  T:n[4],
+					  mAh:n[5],
+					  Checksum:checksum};
+				console.log("TELEM: PLACA (NO IMPLEMENTADO)");
 
  			}
 
- 			else if (n[0]=="$PTLP"){
 
-				datos = {Type:n[0],ID:n[1],Voltage:n[2],Intensity:n[3],Time:n[4],Temperature:n[5],Checksum:checksum};
-				console.log(datos);
-
- 			}
-
-
- 			else if (n[0]=="$GPGGA"){
- 				datos = {Type:n[0],Time:n[1],Latitude:n[2],LatitudeDirection:n[3],Longitude:n[4],LongitudeDirection:n[5],Quality:n[6],SatelliteNumber:n[7],HorizontalDilutionPosition:n[8],Altitude:n[9],Antennaheight:n[10],Geoidalseparation:n[11],GeoidalSeparation:n[12],ASSLU:n[13],DGPS:n[14],Checksum:checksum};
+ 			if (n[0]=="$GPGGA"){
+ 				datos = {Type:n[0],
+					  Time:n[1],
+					  Latitude:n[2],
+					  LatitudeDirection:n[3],
+					  Longitude:n[4],
+					  LongitudeDirection:n[5],
+					  Quality:n[6],
+					  SatelliteNumber:n[7],
+					  HorizontalDilutionPosition:n[8],
+					  Altitude:n[9],
+					  Antennaheight:n[10],
+					  Geoidalseparation:n[11],
+					  GeoidalSeparation:n[12],
+					  ASSLU:n[13],
+					  DGPS:n[14],
+					  Checksum:checksum};
 
  				/*
  				 
@@ -120,12 +152,33 @@ function parser(str){
 
  				 */
 				UPDATE_GPGGA(datos);
- 				// console.log(datos);
+ 				console.log("GPS: GPGGA");
  			}
 
- 			else if (n[0]=="$GPGSA"){
- 				datos = {Type:n[0],Mode:n[1],Fix:n[2],PRN:[n[3],n[4],n[5],n[6],n[7],n[8],n[9],n[10],n[11],n[12],n[13],n[14]],PDOP:n[15],HorizontalDilution:n[16],VerticalDilution:n[17],Checksum:checksum};
- 				console.log(datos);
+ 			
+ 			if (n[0]=="$GPRMC"){
+ 				datos = {Time:n[1],
+					 lat:n[3],
+					 latDirection:n[4],
+					 lon:n[5],
+					 lonDirection:n[6],
+					 vel:(parseFloat(n[6])*1.852),
+					 Checksum:checksum};
+
+				UPDATE_GPRMC(datos);
+ 				console.log("GPS: GPRMC");
+ 			}
+ 			
+ 			if (n[0]=="$GPGSA"){
+ 				datos = {Type:n[0],
+					 Mode:n[1],
+					 Fix:n[2],
+					 PRN:[n[3],n[4],n[5],n[6],n[7],n[8],n[9],n[10],n[11],n[12],n[13],n[14]],
+					 PDOP:n[15],
+					 HorizontalDilution:n[16],
+					 VerticalDilution:n[17],
+					 Checksum:checksum};
+ 				console.log("GPS: GPGSA");
 
  				/*
  				1    = Mode:
@@ -142,9 +195,14 @@ function parser(str){
 				*/
  			}
 
- 			else if (n[0]=="$GPVTG"){
- 				datos = {Type:n[0],TrueTrack:n[1],MagneticTrack:n[3],GroundSpeedknots:n[5],GroundSpeedKilometers:n[7],Checksum:checksum};
- 				console.log(datos);
+ 			if (n[0]=="$GPVTG"){
+ 				datos = {Type:n[0],
+				TrueTrack:n[1],
+				MagneticTrack:n[3],
+				GroundSpeedknots:n[5],
+				GroundSpeedKilometers:n[7],
+				Checksum:checksum};
+ 				console.log("GPS: GPVTG");
 
  				/*
  				1    = Track made good
@@ -159,15 +217,31 @@ function parser(str){
 				*/
  			}
 
- 			else if (n[0]=="$GPZDA"){
- 				datos = {Type:n[0],Hhmmss:n[1],Day:n[2],Month:n[3],Year:n[4],Xx:n[5],Yy:n[6],Checksum:checksum};
- 				console.log(datos);
+ 			if (n[0]=="$GPZDA"){
+ 				datos = {Type:n[0],
+					  Hhmmss:n[1],
+					  Day:n[2],
+					  Month:n[3],
+					  Year:n[4],
+					  Xx:n[5],
+					  Yy:n[6],
+					  Checksum:checksum};
+ 				console.log("GPS: GPZDA");
 
  			}
 
- 			else if (n[0]=="$GPGLL"){
- 				datos = {Type:n[0],lat:n[1],LatitudeDirection:n[2],lon:n[3],LongitudeDirection:n[4],Time:n[5],Data:n[6],Desconocido:n[7],Checksum:checksum};
+ 			if (n[0]=="$GPGLL"){
+ 				datos = {Type:n[0],
+					  lat:n[1],
+					  LatitudeDirection:n[2],
+					  lon:n[3],
+					  LongitudeDirection:n[4],
+					  Time:n[5],
+					  Data:n[6],
+					  Desconocido:n[7],
+					  Checksum:checksum};
  				UPDATE_GPGLL(datos);
+				console.log("GPS: GPGLL");
  			}
 
 

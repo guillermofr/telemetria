@@ -76,7 +76,11 @@
 	}	
 	//Información del bloqueo de satélites 
 	function UPDATE_GPGGA(data){
-		
+		$('.dop span').html(data.dop);
+		var newLL = new google.maps.LatLng(data.lat, data.lon);
+		marker.setPosition(newLL);
+		$('.lat span').html(data.lat);
+		$('.lon span').html(data.lon);
 	}
 	//Información general sobre los satélites
 	function UPDATE_GPGSA(data){
@@ -89,6 +93,14 @@
 	//Vector de velocidad en superficie
 	function UPDATE_GPZDA(data){
 	
+	}
+	function UPDATE_GPRMC(data){
+		var newLL = new google.maps.LatLng(data.lat, data.lon);
+		marker.setPosition(newLL);
+		$('.lat span').html(data.lat);
+		$('.lon span').html(data.lon);
+		$('.kmh span').html(data.vel);
+		
 	}	
 
 
