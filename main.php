@@ -135,6 +135,7 @@ body{
 	/*background-color: tomato;*/
 	width:50%;
 	height:400px;
+	min-width:300px;
 }
 .right_panel {
 	float:right;
@@ -143,6 +144,7 @@ body{
 	height:600px;
 	padding-top:40px;
 	font-size:20px;
+	min-width:300px;
 }
 
 #map_canvas {
@@ -254,7 +256,7 @@ body{
 		<p class="lon"><b>Lon:</b> <span></span></p>
 	</div>
 	<div class="bottom_panel"> 
-	
+		
 	
 
 	</div>
