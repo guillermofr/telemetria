@@ -22,7 +22,7 @@ if (io.server._handle == null){
 function UPDATE_PTLB(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_PTLB',{});
+	io.sockets.emit('SC_UPDATE_PTLB',chunk});
 }	
 //Latitud y longitud
 function UPDATE_GPGLL(chunk){
@@ -55,10 +55,9 @@ function UPDATE_GPZDA(chunk){
 	io.sockets.emit('SC_UPDATE_GPZDA',{});
 }	
 
-
-
 port.on('data', function(data) {
   parser(data.toString());
+  //console.log("GOT: " + data.toString());
 });
 
 port.on('error', function(err) {
@@ -71,12 +70,9 @@ port.open('/dev/ttyACM0', {
   parity: 'none',
   stopBits: 1
 }, function(err) {
-  port.write("");
-  port.close();
+  // port.write("");
+  // port.close();
 });
-
-
-
 
 function parser(str){
  		/* El checksum no va separado por , si no por * */
@@ -87,8 +83,8 @@ function parser(str){
  			
  			if (n[0]=="$PTLB"){
 
-				datos = {Type:n[0],ID:n[1],Voltage:n[2],Intensity:n[3],Time:n[4],Temperature:n[5],Checksum:checksum};
-				console.log(datos);
+				datos = {ID:n[1],V:n[2],I:n[3],T:n[4],mAh:n[5],Checksum:checksum};
+				UPDATE_PTLB(datos);
 
  			}
 
@@ -123,8 +119,8 @@ function parser(str){
 				15   = Checksum
 
  				 */
-
- 				console.log(datos);
+				UPDATE_GPGGA(datos);
+ 				// console.log(datos);
  			}
 
  			else if (n[0]=="$GPGSA"){

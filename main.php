@@ -68,10 +68,10 @@
 	}
 	//información de la batería
 	function UPDATE_PTLB(data){
-		$('.v_bat').html(data.v);
-		$('.i_bat').html(data.i);
-		$('.temp_bat').html(data.temp);
-		$('.w_bat').html(data.w);
+		$('.v_bat').html(data.V);
+		$('.i_bat').html(data.I);
+		$('.temp_bat').html(data.T);
+		$('.w_bat').html(data.W);
 		$('.mah_bat').html(data.mAh);
 	}	
 	//Información del bloqueo de satélites 
