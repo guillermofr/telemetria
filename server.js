@@ -1,7 +1,7 @@
 //SERVER NODE.JS
 
 var io = require('socket.io');
-var SerialPort = require('serialport').SerialPort;
+var SerialPort = require('serialport2').SerialPort;
 var port = new SerialPort();
 
 io = io.listen(1415);
@@ -65,7 +65,7 @@ port.on('error', function(err) {
   console.log(err);
 });
 
-port.open('/dev/ttyUSB0', {
+port.open('/dev/ttyACM0', {
   baudRate: 9600,
   dataBits: 8,
   parity: 'none',
