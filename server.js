@@ -22,43 +22,47 @@ if (io.server._handle == null){
 function UPDATE_PTLB(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_PTLB',{});
+	io.sockets.emit('SC_UPDATE_PTLB',chunk);
 }	
 //Latitud y longitud
 function UPDATE_GPGLL(chunk){
 	//tratar el chunk
 
-	io.sockets.emit('SC_UPDATE_GPGLL',{lat:37.64717,lon:-1.03626});
+	io.sockets.emit('SC_UPDATE_GPGLL',chunk);
 }
 //Información del bloqueo de satélites 
 function UPDATE_GPGGA(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPGGA',{});
+	io.sockets.emit('SC_UPDATE_GPGGA',chunk);
 }
 //Información general sobre los satélites
 function UPDATE_GPGSA(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPGSA',{});
+	io.sockets.emit('SC_UPDATE_GPGSA',chunk);
 }	
 //Vector de velocidad en superficie
 function UPDATE_GPVTG(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPVTG',{});
+	io.sockets.emit('SC_UPDATE_GPVTG',chunk);
 }	
 //Vector de velocidad en superficie
 function UPDATE_GPZDA(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPZDA',{});
+	io.sockets.emit('SC_UPDATE_GPZDA',chunk);
+}
+function UPDATE_GPRMC(chunk){
+	//tratar el chunk
+	
+	io.sockets.emit('SC_UPDATE_GPRMC',chunk);
 }	
 
-
-
 port.on('data', function(data) {
-  parser(data.toString());
+  parser(data);
+  //console.log("GOT: " + data.toString());
 });
 
 port.on('error', function(err) {
@@ -71,37 +75,61 @@ port.open('/dev/ttyACM0', {
   parity: 'none',
   stopBits: 1
 }, function(err) {
-  port.write("");
-  port.close();
+  // port.write("");
+  // port.close();
 });
-
-
-
 
 function parser(str){
  		/* El checksum no va separado por , si no por * */
  		var aux = str.split("*"); /* Aux[0] = Informacion;  Aux[1]= Checksum */
- 		/* Trozeamos la cadena */ 
+ 		/* Troceamos la cadena */ 
  		var n = aux[0].split(",");
  		var checksum = aux[1];
  			
+		console.log(n);
+		
  			if (n[0]=="$PTLB"){
 
-				datos = {Type:n[0],ID:n[1],Voltage:n[2],Intensity:n[3],Time:n[4],Temperature:n[5],Checksum:checksum};
-				console.log(datos);
+				datos = {ID:n[1],
+					  V:n[2],
+					  I:n[3],
+					  T:n[4],
+					  mAh:n[5],
+					  Checksum:checksum};
+				UPDATE_PTLB(datos);
+				console.log("TELEM: BAT");
+ 			}
+
+ 			if (n[0]=="$PTLP"){
+
+				datos = {ID:n[1],
+					  V:n[2],
+					  I:n[3],
+					  T:n[4],
+					  mAh:n[5],
+					  Checksum:checksum};
+				console.log("TELEM: PLACA (NO IMPLEMENTADO)");
 
  			}
 
- 			else if (n[0]=="$PTLP"){
 
-				datos = {Type:n[0],ID:n[1],Voltage:n[2],Intensity:n[3],Time:n[4],Temperature:n[5],Checksum:checksum};
-				console.log(datos);
-
- 			}
-
-
- 			else if (n[0]=="$GPGGA"){
- 				datos = {Type:n[0],Time:n[1],Latitude:n[2],LatitudeDirection:n[3],Longitude:n[4],LongitudeDirection:n[5],Quality:n[6],SatelliteNumber:n[7],HorizontalDilutionPosition:n[8],Altitude:n[9],Antennaheight:n[10],Geoidalseparation:n[11],GeoidalSeparation:n[12],ASSLU:n[13],DGPS:n[14],Checksum:checksum};
+ 			if (n[0]=="$GPGGA"){
+ 				datos = {Type:n[0],
+					  Time:n[1],
+					  lat:n[2],
+					  latDirection:n[3],
+					  lon:n[4],
+					  lonDirection:n[5],
+					  Quality:n[6],
+					  SatelliteNumber:n[7],
+					  HorizontalDilutionPosition:n[8],
+					  Altitude:n[9],
+					  Antennaheight:n[10],
+					  Geoidalseparation:n[11],
+					  GeoidalSeparation:n[12],
+					  ASSLU:n[13],
+					  DGPS:n[14],
+					  Checksum:checksum};
 
  				/*
  				 
@@ -123,13 +151,77 @@ function parser(str){
 				15   = Checksum
 
  				 */
+			
+				var temp =  datos.lon;
+				var lon = temp.split('.');
+				var p = parseInt(lon[0]/1000);
+				
+				if (datos.lonDirection == 'W') p = '-'+p;
+				
+				var s = parseInt(lon[0]%1000);
+				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
 
- 				console.log(datos);
+				datos.lon = r;
+				
+				
+				var temp =  datos.lat;
+				var lat = temp.split('.');
+				var p = parseInt(lat[0]/100);
+				var s = parseInt(lat[0]%100);
+				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+				datos.lat = r;
+				
+				UPDATE_GPGGA(datos);
+ 				console.log("GPS: GPGGA");
  			}
 
- 			else if (n[0]=="$GPGSA"){
- 				datos = {Type:n[0],Mode:n[1],Fix:n[2],PRN:[n[3],n[4],n[5],n[6],n[7],n[8],n[9],n[10],n[11],n[12],n[13],n[14]],PDOP:n[15],HorizontalDilution:n[16],VerticalDilution:n[17],Checksum:checksum};
- 				console.log(datos);
+ 			
+ 			if (n[0]=="$GPRMC"){
+ 				datos = {Time:n[1],
+					 lat:n[3],
+					 latDirection:n[4],
+					 lon:n[5],
+					 lonDirection:n[6],
+					 vel:(parseFloat(n[6])*1.852),
+					 Checksum:checksum};
+			
+				var temp =  datos.lon;
+				var lon = temp.split('.');
+				var p = parseInt(lon[0]/1000);
+				
+				if (datos.lonDirection == 'W') p = '-'+p;
+				
+				var s = parseInt(lon[0]%1000);
+				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+
+				datos.lon = r;
+					 
+				var temp =  datos.lat;
+				var lat = temp.split('.');
+				var p = parseInt(lat[0]/100);
+				var s = parseInt(lat[0]%100);
+				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+				datos.lat = r;
+					
+				UPDATE_GPRMC(datos);
+ 				console.log("GPS: GPRMC");
+ 			}
+ 			
+ 			if (n[0]=="$GPGSA"){
+ 				datos = {Type:n[0],
+					 Mode:n[1],
+					 Fix:n[2],
+					 PRN:[n[3],n[4],n[5],n[6],n[7],n[8],n[9],n[10],n[11],n[12],n[13],n[14]],
+					 PDOP:n[15],
+					 HorizontalDilution:n[16],
+					 VerticalDilution:n[17],
+					 Checksum:checksum};
+					 
+ 				console.log("GPS: GPGSA");
 
  				/*
  				1    = Mode:
@@ -146,9 +238,14 @@ function parser(str){
 				*/
  			}
 
- 			else if (n[0]=="$GPVTG"){
- 				datos = {Type:n[0],TrueTrack:n[1],MagneticTrack:n[3],GroundSpeedknots:n[5],GroundSpeedKilometers:n[7],Checksum:checksum};
- 				console.log(datos);
+ 			if (n[0]=="$GPVTG"){
+ 				datos = {Type:n[0],
+				TrueTrack:n[1],
+				MagneticTrack:n[3],
+				GroundSpeedknots:n[5],
+				GroundSpeedKilometers:n[7],
+				Checksum:checksum};
+ 				console.log("GPS: GPVTG");
 
  				/*
  				1    = Track made good
@@ -163,15 +260,53 @@ function parser(str){
 				*/
  			}
 
- 			else if (n[0]=="$GPZDA"){
- 				datos = {Type:n[0],Hhmmss:n[1],Day:n[2],Month:n[3],Year:n[4],Xx:n[5],Yy:n[6],Checksum:checksum};
- 				console.log(datos);
+ 			if (n[0]=="$GPZDA"){
+ 				datos = {Type:n[0],
+					  Hhmmss:n[1],
+					  Day:n[2],
+					  Month:n[3],
+					  Year:n[4],
+					  Xx:n[5],
+					  Yy:n[6],
+					  Checksum:checksum};
+ 				console.log("GPS: GPZDA");
 
  			}
 
- 			else if (n[0]=="$GPGLL"){
- 				datos = {Type:n[0],lat:n[1],LatitudeDirection:n[2],lon:n[3],LongitudeDirection:n[4],Time:n[5],Data:n[6],Desconocido:n[7],Checksum:checksum};
+ 			if (n[0]=="$GPGLL"){
+ 				datos = {Type:n[0],
+					  lat:n[1],
+					  latDirection:n[2],
+					  lon:n[3],
+					  lonDirection:n[4],
+					  Time:n[5],
+					  Data:n[6],
+					  Desconocido:n[7],
+					  Checksum:checksum};
+					  
+				
+				var temp =  datos.lon;
+				var lon = temp.split('.');
+				var p = parseInt(lon[0]/1000);
+				
+				if (datos.lonDirection == 'W') p = '-'+p;
+				
+				var s = parseInt(lon[0]%1000);
+				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+
+				datos.lon = r;
+					  
+				var temp =  datos.lat;
+				var lat = temp.split('.');
+				var p = parseInt(lat[0]/100);
+				var s = parseInt(lat[0]%100);
+				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+				datos.lat = r;
+				
  				UPDATE_GPGLL(datos);
+				console.log("GPS: GPGLL");
  			}
 
 

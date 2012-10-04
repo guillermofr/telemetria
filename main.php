@@ -68,15 +68,19 @@
 	}
 	//información de la batería
 	function UPDATE_PTLB(data){
-		$('.v_bat').html(data.v);
-		$('.i_bat').html(data.i);
-		$('.temp_bat').html(data.temp);
-		$('.w_bat').html(data.w);
+		$('.v_bat').html(data.V);
+		$('.i_bat').html(data.I);
+		$('.temp_bat').html(data.T);
+		$('.w_bat').html(parseFloat(data.V) * parseFloat(data.I));
 		$('.mah_bat').html(data.mAh);
 	}	
 	//Información del bloqueo de satélites 
 	function UPDATE_GPGGA(data){
-		
+		$('.dop span').html(data.dop);
+		var newLL = new google.maps.LatLng(data.lat, data.lon);
+		marker.setPosition(newLL);
+		$('.lat span').html(data.lat);
+		$('.lon span').html(data.lon);
 	}
 	//Información general sobre los satélites
 	function UPDATE_GPGSA(data){
@@ -89,6 +93,14 @@
 	//Vector de velocidad en superficie
 	function UPDATE_GPZDA(data){
 	
+	}
+	function UPDATE_GPRMC(data){
+		var newLL = new google.maps.LatLng(data.lat, data.lon);
+		marker.setPosition(newLL);
+		$('.lat span').html(data.lat);
+		$('.lon span').html(data.lon);
+		$('.kmh span').html(data.vel);
+		
 	}	
 
 
