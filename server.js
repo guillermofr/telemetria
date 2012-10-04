@@ -3,6 +3,7 @@
 var io = require('socket.io');
 var SerialPort = require('serialport2').SerialPort;
 var port = new SerialPort();
+var buffer = '';
 
 io = io.listen(1415);
 //io.set('log level', 1);
@@ -13,11 +14,6 @@ if (io.server._handle == null){
 }
 
 
-
-
-	
-	
-	
 //información de la batería
 function UPDATE_PTLB(chunk){
 	//tratar el chunk
@@ -61,7 +57,14 @@ function UPDATE_GPRMC(chunk){
 }	
 
 port.on('data', function(data) {
-  parser(data);
+  temp = data.toString().split('\n');
+  if (temp.length > 1) {
+	parser(buffer + temp[0]);
+	buffer = temp[1];
+  } else  {
+	buffer += data;
+  }
+  
   //console.log("GOT: " + data.toString());
 });
 
@@ -85,8 +88,6 @@ function parser(str){
  		/* Troceamos la cadena */ 
  		var n = aux[0].split(",");
  		var checksum = aux[1];
- 			
-		console.log(n);
 		
  			if (n[0]=="$PTLB"){
 
