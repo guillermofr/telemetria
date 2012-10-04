@@ -99,7 +99,7 @@
 		marker.setPosition(newLL);
 		$('.lat span').html(data.lat);
 		$('.lon span').html(data.lon);
-		$('.kmh span').html(data.vel);
+		$('.kmh').html(data.vel);
 		
 	}	
 

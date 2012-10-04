@@ -155,11 +155,11 @@ function parser(str){
 			
 				var temp =  datos.lon;
 				var lon = temp.split('.');
-				var p = parseInt(lon[0]/1000);
+				var p = parseInt(lon[0]/100);
 				
 				if (datos.lonDirection == 'W') p = '-'+p;
 				
-				var s = parseInt(lon[0]%1000);
+				var s = parseInt(lon[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
@@ -185,16 +185,19 @@ function parser(str){
 					 latDirection:n[4],
 					 lon:n[5],
 					 lonDirection:n[6],
-					 vel:(parseFloat(n[6])*1.852),
+					 vel:[7], //nudos (*1.852)
 					 Checksum:checksum};
 			
+				var tempv = parseFloat(datos.vel);
+				datos.vel = tempv*1.852;
+					 
 				var temp =  datos.lon;
 				var lon = temp.split('.');
-				var p = parseInt(lon[0]/1000);
+				var p = parseInt(lon[0]/100);
 				
 				if (datos.lonDirection == 'W') p = '-'+p;
 				
-				var s = parseInt(lon[0]%1000);
+				var s = parseInt(lon[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
@@ -288,11 +291,11 @@ function parser(str){
 				
 				var temp =  datos.lon;
 				var lon = temp.split('.');
-				var p = parseInt(lon[0]/1000);
+				var p = parseInt(lon[0]/100);
 				
 				if (datos.lonDirection == 'W') p = '-'+p;
 				
-				var s = parseInt(lon[0]%1000);
+				var s = parseInt(lon[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
