@@ -28,40 +28,40 @@ function UPDATE_PTLB(chunk){
 function UPDATE_GPGLL(chunk){
 	//tratar el chunk
 
-	io.sockets.emit('SC_UPDATE_GPGLL',{lat:37.64717,lon:-1.03626});
+	io.sockets.emit('SC_UPDATE_GPGLL',chunk);
 }
 //Información del bloqueo de satélites 
 function UPDATE_GPGGA(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPGGA',{});
+	io.sockets.emit('SC_UPDATE_GPGGA',chunk);
 }
 //Información general sobre los satélites
 function UPDATE_GPGSA(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPGSA',{});
+	io.sockets.emit('SC_UPDATE_GPGSA',chunk);
 }	
 //Vector de velocidad en superficie
 function UPDATE_GPVTG(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPVTG',{});
+	io.sockets.emit('SC_UPDATE_GPVTG',chunk);
 }	
 //Vector de velocidad en superficie
 function UPDATE_GPZDA(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPZDA',{});
+	io.sockets.emit('SC_UPDATE_GPZDA',chunk);
 }
 function UPDATE_GPRMC(chunk){
 	//tratar el chunk
 	
-	io.sockets.emit('SC_UPDATE_GPRMC',{});
+	io.sockets.emit('SC_UPDATE_GPRMC',chunk);
 }	
 
 port.on('data', function(data) {
-  parser(data.toString());
+  parser(data);
   //console.log("GOT: " + data.toString());
 });
 
@@ -116,10 +116,10 @@ function parser(str){
  			if (n[0]=="$GPGGA"){
  				datos = {Type:n[0],
 					  Time:n[1],
-					  Latitude:n[2],
-					  LatitudeDirection:n[3],
-					  Longitude:n[4],
-					  LongitudeDirection:n[5],
+					  lat:n[2],
+					  latDirection:n[3],
+					  lon:n[4],
+					  lonDirection:n[5],
 					  Quality:n[6],
 					  SatelliteNumber:n[7],
 					  HorizontalDilutionPosition:n[8],
@@ -151,6 +151,28 @@ function parser(str){
 				15   = Checksum
 
  				 */
+			
+				var temp =  datos.lon;
+				var lon = temp.split('.');
+				var p = parseInt(lon[0]/1000);
+				
+				if (datos.lonDirection == 'W') p = '-'+p;
+				
+				var s = parseInt(lon[0]%1000);
+				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+
+				datos.lon = r;
+				
+				
+				var temp =  datos.lat;
+				var lat = temp.split('.');
+				var p = parseInt(lat[0]/100);
+				var s = parseInt(lat[0]%100);
+				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+				datos.lat = r;
+				
 				UPDATE_GPGGA(datos);
  				console.log("GPS: GPGGA");
  			}
@@ -164,7 +186,27 @@ function parser(str){
 					 lonDirection:n[6],
 					 vel:(parseFloat(n[6])*1.852),
 					 Checksum:checksum};
+			
+				var temp =  datos.lon;
+				var lon = temp.split('.');
+				var p = parseInt(lon[0]/1000);
+				
+				if (datos.lonDirection == 'W') p = '-'+p;
+				
+				var s = parseInt(lon[0]%1000);
+				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
 
+				datos.lon = r;
+					 
+				var temp =  datos.lat;
+				var lat = temp.split('.');
+				var p = parseInt(lat[0]/100);
+				var s = parseInt(lat[0]%100);
+				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+				datos.lat = r;
+					
 				UPDATE_GPRMC(datos);
  				console.log("GPS: GPRMC");
  			}
@@ -178,6 +220,7 @@ function parser(str){
 					 HorizontalDilution:n[16],
 					 VerticalDilution:n[17],
 					 Checksum:checksum};
+					 
  				console.log("GPS: GPGSA");
 
  				/*
@@ -233,13 +276,35 @@ function parser(str){
  			if (n[0]=="$GPGLL"){
  				datos = {Type:n[0],
 					  lat:n[1],
-					  LatitudeDirection:n[2],
+					  latDirection:n[2],
 					  lon:n[3],
-					  LongitudeDirection:n[4],
+					  lonDirection:n[4],
 					  Time:n[5],
 					  Data:n[6],
 					  Desconocido:n[7],
 					  Checksum:checksum};
+					  
+				
+				var temp =  datos.lon;
+				var lon = temp.split('.');
+				var p = parseInt(lon[0]/1000);
+				
+				if (datos.lonDirection == 'W') p = '-'+p;
+				
+				var s = parseInt(lon[0]%1000);
+				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+
+				datos.lon = r;
+					  
+				var temp =  datos.lat;
+				var lat = temp.split('.');
+				var p = parseInt(lat[0]/100);
+				var s = parseInt(lat[0]%100);
+				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
+				r = p + '.' + c.toString().replace('.','');
+				datos.lat = r;
+				
  				UPDATE_GPGLL(datos);
 				console.log("GPS: GPGLL");
  			}
