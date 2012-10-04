@@ -29,6 +29,9 @@
 	socket.on('SC_UPDATE_GPZDA', function (data) {
 		UPDATE_GPZDA(data);
 	});
+	socket.on('SC_UPDATE_GPRMC', function (data) {
+		UPDATE_GPRMC(data);
+	});
 	
 	
 	
@@ -99,7 +102,7 @@
 		marker.setPosition(newLL);
 		$('.lat span').html(data.lat);
 		$('.lon span').html(data.lon);
-		$('.kmh').html(data.vel);
+		$('span.kmh').html(data.vel);
 		
 	}	
 
@@ -122,7 +125,7 @@
 
 
 <?php 
-echo "<h2>Telemetría V0.0</h2>";
+echo "<h2>Telemetría V0.2</h2>";
 ?>
 <style>
 
@@ -205,59 +208,59 @@ body{
 		<h5>Sensores Batería</h5>
 		<div>
 			<span class="nombre">V Bat</span>
-			<span class="dato v_bat">...</span> 
+			<span class="dato v_bat">0.0</span> 
 		</div>
 		<div>
 			<span class="nombre">I Bat</span>
-			<span class="dato i_bat">...</span>  
+			<span class="dato i_bat">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">W</span>
-			<span class="dato w_bat">...</span>  
+			<span class="dato w_bat">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">mAh</span>
-			<span class="dato mah_bat">...</span>  
+			<span class="dato mah_bat">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">Temperatura</span>
-			<span class="dato temp_bat">...</span>  
+			<span class="dato temp_bat">0.0</span>  
 			
 		</div>
 		
 		<h5>Sensores Placa</h5>
 		<div>
 			<span class="nombre">V Placa</span>
-			<span class="dato v_placa">...</span>  
+			<span class="dato v_placa">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">I Placa</span>
-			<span class="dato i_placa">...</span>  
+			<span class="dato i_placa">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">W</span>
-			<span class="dato w_placa">...</span>  
+			<span class="dato w_placa">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">mAh</span>
-			<span class="dato mah_placa">...</span>  
+			<span class="dato mah_placa">0.0</span>  
 		</div>
 		<h5>Sensores GPS</h5>
 		<div>
 			<span class="nombre">kmh</span>
-			<span class="dato kmh">...</span>  
+			<span class="dato kmh">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">kmh media</span>
-			<span class="dato kmh_media">...</span>  
+			<span class="dato kmh_media">0.0</span>  
 		</div>
 		<div>
 			<span class="nombre">hora</span>
-			<span class="dato hora">...</span>
+			<span class="dato hora">0.0</span>
 		</div>
 		<div>
 			<span class="nombre">GPS DoP</span>
-			<span class="dato dop">...</span>  
+			<span class="dato dop">0.0</span>  
 		</div>
 
 	</div>

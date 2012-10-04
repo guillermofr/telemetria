@@ -82,6 +82,7 @@ port.open('/dev/ttyACM0', {
   // port.close();
 });
 
+
 function parser(str){
  		/* El checksum no va separado por , si no por * */
  		var aux = str.split("*"); /* Aux[0] = Informacion;  Aux[1]= Checksum */
@@ -163,7 +164,7 @@ function parser(str){
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
-				datos.lon = r;
+				datos.lon = parseFloat(r).toFixed(5);
 				
 				
 				var temp =  datos.lat;
@@ -172,7 +173,7 @@ function parser(str){
 				var s = parseInt(lat[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
-				datos.lat = r;
+				datos.lat = parseFloat(r).toFixed(5);
 				
 				UPDATE_GPGGA(datos);
  				console.log("GPS: GPGGA");
@@ -180,16 +181,17 @@ function parser(str){
 
  			
  			if (n[0]=="$GPRMC"){
+			  
  				datos = {Time:n[1],
 					 lat:n[3],
 					 latDirection:n[4],
 					 lon:n[5],
 					 lonDirection:n[6],
-					 vel:[7], //nudos (*1.852)
+					 vel:n[7], //nudos (*1.852)
 					 Checksum:checksum};
 			
 				var tempv = parseFloat(datos.vel);
-				datos.vel = tempv*1.852;
+				datos.vel = (tempv*1.852).toFixed(2);
 					 
 				var temp =  datos.lon;
 				var lon = temp.split('.');
@@ -201,7 +203,7 @@ function parser(str){
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
-				datos.lon = r;
+				datos.lon = parseFloat(r).toFixed(5);
 					 
 				var temp =  datos.lat;
 				var lat = temp.split('.');
@@ -209,7 +211,7 @@ function parser(str){
 				var s = parseInt(lat[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
-				datos.lat = r;
+				datos.lat = parseFloat(r).toFixed(5);
 					
 				UPDATE_GPRMC(datos);
  				console.log("GPS: GPRMC");
@@ -299,7 +301,7 @@ function parser(str){
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
-				datos.lon = r;
+				datos.lon = parseFloat(r).toFixed(5);
 					  
 				var temp =  datos.lat;
 				var lat = temp.split('.');
@@ -307,7 +309,7 @@ function parser(str){
 				var s = parseInt(lat[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
-				datos.lat = r;
+				datos.lat = parseFloat(r).toFixed(5);
 				
  				UPDATE_GPGLL(datos);
 				console.log("GPS: GPGLL");
