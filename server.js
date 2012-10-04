@@ -3,6 +3,7 @@
 var io = require('socket.io');
 var SerialPort = require('serialport2').SerialPort;
 var port = new SerialPort();
+var buffer = '';
 
 io = io.listen(1415);
 //io.set('log level', 1);
@@ -13,11 +14,6 @@ if (io.server._handle == null){
 }
 
 
-
-
-	
-	
-	
 //información de la batería
 function UPDATE_PTLB(chunk){
 	//tratar el chunk
@@ -61,7 +57,14 @@ function UPDATE_GPRMC(chunk){
 }	
 
 port.on('data', function(data) {
-  parser(data);
+  temp = data.toString().split('\n');
+  if (temp.length > 1) {
+	parser(buffer + temp[0]);
+	buffer = temp[1];
+  } else  {
+	buffer += data;
+  }
+  
   //console.log("GOT: " + data.toString());
 });
 
@@ -79,14 +82,13 @@ port.open('/dev/ttyACM0', {
   // port.close();
 });
 
+
 function parser(str){
  		/* El checksum no va separado por , si no por * */
  		var aux = str.split("*"); /* Aux[0] = Informacion;  Aux[1]= Checksum */
  		/* Troceamos la cadena */ 
  		var n = aux[0].split(",");
  		var checksum = aux[1];
- 			
-		console.log(n);
 		
  			if (n[0]=="$PTLB"){
 
@@ -154,15 +156,15 @@ function parser(str){
 			
 				var temp =  datos.lon;
 				var lon = temp.split('.');
-				var p = parseInt(lon[0]/1000);
+				var p = parseInt(lon[0]/100);
 				
 				if (datos.lonDirection == 'W') p = '-'+p;
 				
-				var s = parseInt(lon[0]%1000);
+				var s = parseInt(lon[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
-				datos.lon = r;
+				datos.lon = parseFloat(r).toFixed(5);
 				
 				
 				var temp =  datos.lat;
@@ -171,7 +173,7 @@ function parser(str){
 				var s = parseInt(lat[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
-				datos.lat = r;
+				datos.lat = parseFloat(r).toFixed(5);
 				
 				UPDATE_GPGGA(datos);
  				console.log("GPS: GPGGA");
@@ -179,25 +181,29 @@ function parser(str){
 
  			
  			if (n[0]=="$GPRMC"){
+			  
  				datos = {Time:n[1],
 					 lat:n[3],
 					 latDirection:n[4],
 					 lon:n[5],
 					 lonDirection:n[6],
-					 vel:(parseFloat(n[6])*1.852),
+					 vel:n[7], //nudos (*1.852)
 					 Checksum:checksum};
 			
+				var tempv = parseFloat(datos.vel);
+				datos.vel = (tempv*1.852).toFixed(2);
+					 
 				var temp =  datos.lon;
 				var lon = temp.split('.');
-				var p = parseInt(lon[0]/1000);
+				var p = parseInt(lon[0]/100);
 				
 				if (datos.lonDirection == 'W') p = '-'+p;
 				
-				var s = parseInt(lon[0]%1000);
+				var s = parseInt(lon[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
-				datos.lon = r;
+				datos.lon = parseFloat(r).toFixed(5);
 					 
 				var temp =  datos.lat;
 				var lat = temp.split('.');
@@ -205,7 +211,7 @@ function parser(str){
 				var s = parseInt(lat[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
-				datos.lat = r;
+				datos.lat = parseFloat(r).toFixed(5);
 					
 				UPDATE_GPRMC(datos);
  				console.log("GPS: GPRMC");
@@ -287,15 +293,15 @@ function parser(str){
 				
 				var temp =  datos.lon;
 				var lon = temp.split('.');
-				var p = parseInt(lon[0]/1000);
+				var p = parseInt(lon[0]/100);
 				
 				if (datos.lonDirection == 'W') p = '-'+p;
 				
-				var s = parseInt(lon[0]%1000);
+				var s = parseInt(lon[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lon[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
 
-				datos.lon = r;
+				datos.lon = parseFloat(r).toFixed(5);
 					  
 				var temp =  datos.lat;
 				var lat = temp.split('.');
@@ -303,7 +309,7 @@ function parser(str){
 				var s = parseInt(lat[0]%100);
 				var c = (parseFloat(s.toString() + '.' + lat[1])/60)*100;
 				r = p + '.' + c.toString().replace('.','');
-				datos.lat = r;
+				datos.lat = parseFloat(r).toFixed(5);
 				
  				UPDATE_GPGLL(datos);
 				console.log("GPS: GPGLL");
