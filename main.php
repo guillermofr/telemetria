@@ -196,7 +196,8 @@ body{
 	background-image:url('./LOGOMLPRT.png');
 	height:175;
 	width:500px;
-
+	background-size:95%;
+	background-repeat:no-repeat;
 }
 
 </style>
