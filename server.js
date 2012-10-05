@@ -72,8 +72,8 @@ port.on('error', function(err) {
   console.log(err);
 });
 
-port.open('/dev/ttyACM0', {
-  baudRate: 9600,
+port.open('/dev/ttyUSB0', {
+  baudRate: 19200,
   dataBits: 8,
   parity: 'none',
   stopBits: 1
