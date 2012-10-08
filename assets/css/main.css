@@ -1,0 +1,71 @@
+
+h2 {
+	border-width: 10px 0 0px 10px;
+	border-style: dashed;
+	padding: 17px;
+}
+
+body{
+	font-family:Arial;
+}
+
+.bottom_panel {
+	float:left;
+	/*background-color: red;*/
+	height:200px;
+	width:100%;
+}
+.left_panel {
+	float:left;
+	/*background-color: tomato;*/
+	width:50%;
+	height:400px;
+	min-width:300px;
+}
+.right_panel {
+	float:right;
+	/*background-color: gold;*/
+	width:50%;
+	height:600px;
+	padding-top:40px;
+	font-size:20px;
+	min-width:300px;
+}
+
+#map_canvas {
+	display:block;
+	width: 100%;
+	height: 500px;
+}
+
+.left_panel div {
+	display: inline-block;
+	width: 28%;
+	/*background-color: limeGreen;*/
+	margin: 5px;
+	height: 89px;
+	overflow: hidden;
+	border-width:0 5px 5px 0;
+	border-style:dashed;
+	border-color:black;
+	border-radius:30px 5px;
+}
+.left_panel div .dato {
+	font-size: 39px;
+	display:block;
+	float:left;
+}
+.left_panel div .nombre {
+	width:100%;
+	float:right;
+	margin:5px;
+	text-align:right;
+}
+
+#mlprt {
+	background-image:url('/assets/img/LOGOMLPRT.png');
+	height:175px;
+	width:550px;
+	background-size:95%;
+	background-repeat:no-repeat;
+}

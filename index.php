@@ -1,6 +1,16 @@
-<script src="./jquery.js"></script>
-<script src="./socket.io.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <title>Telemetria</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/main.css" rel="stylesheet">
+  </head>
+  <body>
+	<script src="/assets/js/jquery-1.8.2.min.js"></script>
+	<script src="/assets/js/socket.io.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
 
 //socket io
@@ -69,7 +79,7 @@
 		$('.lat span').html(data.lat);
 		$('.lon span').html(data.lon);
 	}
-	//información de la batería
+	//informaciï¿½n de la baterï¿½a
 	function UPDATE_PTLB(data){
 		$('.v_bat').html(data.V);
 		$('.i_bat').html(data.I);
@@ -77,7 +87,7 @@
 		$('.w_bat').html(parseFloat(data.V) * parseFloat(data.I));
 		$('.mah_bat').html(data.mAh);
 	}	
-	//Información del bloqueo de satélites 
+	//Informaciï¿½n del bloqueo de satï¿½lites 
 	function UPDATE_GPGGA(data){
 		$('.dop span').html(data.dop);
 		var newLL = new google.maps.LatLng(data.lat, data.lon);
@@ -85,7 +95,7 @@
 		$('.lat span').html(data.lat);
 		$('.lon span').html(data.lon);
 	}
-	//Información general sobre los satélites
+	//Informaciï¿½n general sobre los satï¿½lites
 	function UPDATE_GPGSA(data){
 	
 	}	
@@ -122,91 +132,9 @@
 </script>
 
 
-
-
-<?php 
-echo "<h2>Telemetría V0.2</h2>";
-?>
-<style>
-
-h2 {
-	border-width: 10px 0 0px 10px;
-	border-style: dashed;
-	padding: 17px;
-}
-
-body{
-	font-family:Arial;
-}
-
-.bottom_panel {
-	float:left;
-	/*background-color: red;*/
-	height:200px;
-	width:100%;
-}
-.left_panel {
-	float:left;
-	/*background-color: tomato;*/
-	width:50%;
-	height:400px;
-	min-width:300px;
-}
-.right_panel {
-	float:right;
-	/*background-color: gold;*/
-	width:50%;
-	height:600px;
-	padding-top:40px;
-	font-size:20px;
-	min-width:300px;
-}
-
-#map_canvas {
-	display:block;
-	width: 100%;
-	height: 500px;
-}
-
-.left_panel div {
-	display: inline-block;
-	width: 28%;
-	/*background-color: limeGreen;*/
-	margin: 5px;
-	height: 89px;
-	overflow: hidden;
-	border-width:0 5px 5px 0;
-	border-style:dashed;
-	border-color:black;
-	border-radius:30px 5px;
-}
-.left_panel div .dato {
-	font-size: 39px;
-	display:block;
-	float:left;
-}
-.left_panel div .nombre {
-	width:100%;
-	float:right;
-	margin:5px;
-	text-align:right;
-}
-
-#mlprt {
-	background-image:url('./LOGOMLPRT.png');
-	height:175;
-	width:500px;
-	background-size:95%;
-	background-repeat:no-repeat;
-}
-
-</style>
-
-
-<body>
 	
 	<div class="left_panel"> 
-		<h5>Sensores Batería</h5>
+		<h5>Sensores BaterÃ­a</h5>
 		<div>
 			<span class="nombre">V Bat</span>
 			<span class="dato v_bat">0.0</span> 
@@ -276,5 +204,14 @@ body{
 	
 
 	</div>
+    
+    
+    
+    
+    
+  </body>
+</html>
 
-</body>
+
+
+
