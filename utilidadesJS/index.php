@@ -3,13 +3,13 @@
   <head>
   	<meta charset="utf-8">
     <title>Telemetria</title>
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/css/main.css" rel="stylesheet">
   </head>
   <body>
-	<script src="/assets/js/jquery-1.8.2.min.js"></script>
-	<script src="/assets/js/socket.io.js"></script>
-    <script src="/assets/js/bootstrap.min.js"></script>
+	<script src="./assets/js/jquery-1.8.2.min.js"></script>
+	<script src="./assets/js/socket.io.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
 
