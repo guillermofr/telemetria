@@ -42,10 +42,11 @@ var drawingManager = new google.maps.drawing.DrawingManager({
 
         google.maps.event.addDomListener(drawingManager, 'polylinecomplete', function(line) {
             path = line.getPath();
-            document.getElementById("action").value += "#polyline\n";
+            document.getElementById("action").value += "var circuito = [\n";
             for(var i = 0; i < path.length; i++) {
               document.getElementById("action").value += '['+ path.getAt(i).lng() + ',' +path.getAt(i).lat() + '],\n';
             }
+             document.getElementById("action").value += "]";
 console.log(path);                                    
         });
 
