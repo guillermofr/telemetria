@@ -103,7 +103,7 @@
 
 	function initialize(){
 
-		m1 = drawMap(circuito,692,500);
+		m1 = drawMap(circuito,600,440);
 
 		m1.setPoint(circuito[3][0],circuito[3][1],5);
 
